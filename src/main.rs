@@ -2,7 +2,7 @@ use std::process;
 use std::env;
 use std::fs;
 
-use nokheui::hangul::disassemble;
+use nokheui::Nokheui;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -13,6 +13,10 @@ fn main() {
     }
 
     let data: String = fs::read_to_string(&args[1]).unwrap();
+    let data: Vec<Vec<char>> = data.split('\n').map(|line| line.chars().collect()).collect();
 
-    println!("{:?}", data);    
+    let interpreter: Nokheui = Nokheui::new(data);
+    let exit_code: i32 = interpreter.run();
+
+    process::exit(exit_code);
 }
