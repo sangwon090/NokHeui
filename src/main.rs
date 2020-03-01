@@ -1,3 +1,5 @@
+use nokheui::hangul::disassemble;
+
 fn main() {
-    println!("Hello, world!");
+    println!("{:?}", disassemble('뷁'));    
 }
