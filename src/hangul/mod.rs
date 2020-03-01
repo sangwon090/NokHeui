@@ -16,7 +16,11 @@ pub fn is_hangul(hangul_char: char) -> bool {
     }
 }
 
-pub fn disassemble(hangul_char: char) -> Result<(char, char, Option<char>), InvalidHangulError> {
+pub fn get_jongseong_position(hangul_char: char) -> usize {
+    return JONGSEONG_LIST.iter().position(|&c| c == hangul_char).unwrap();
+}
+
+pub fn disassemble_hangul(hangul_char: char) -> Result<(char, char, char), InvalidHangulError> {
     if !is_hangul(hangul_char) {
         return Err(InvalidHangulError);
     }
@@ -27,9 +31,5 @@ pub fn disassemble(hangul_char: char) -> Result<(char, char, Option<char>), Inva
     let jungseong: usize = ((hangul_char - 0xAC00 - ((choseong as u32) * 21 * 28)) / 28) as usize;
     let jongseong: usize =  (hangul_char - 0xAC00 - ((choseong as u32) * 21 * 28) - ((jungseong as u32) * 28)) as usize;
 
-    return Ok((CHOSEONG_LIST[choseong], JUNGSEONG_LIST[jungseong], if jongseong != 0 {
-        Some(JONGSEONG_LIST[jongseong])
-    } else {
-        None
-    }));
+    return Ok((CHOSEONG_LIST[choseong], JUNGSEONG_LIST[jungseong], JONGSEONG_LIST[jongseong]));
 }

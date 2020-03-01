@@ -15,7 +15,7 @@ fn main() {
     let data: String = fs::read_to_string(&args[1]).unwrap();
     let data: Vec<Vec<char>> = data.split('\n').map(|line| line.chars().collect()).collect();
 
-    let interpreter: Nokheui = Nokheui::new(data);
+    let mut interpreter: Nokheui = Nokheui::new(data);
     let exit_code: i32 = interpreter.run();
 
     process::exit(exit_code);
