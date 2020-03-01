@@ -64,7 +64,7 @@ impl Nokheui {
 
                 },
                 'ㅅ' => {
-                    
+                    self.selected_data = get_jongseong_position(jaso.2);
                 },
                 'ㅆ' => {
 
