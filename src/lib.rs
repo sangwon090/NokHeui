@@ -1,5 +1,6 @@
 pub mod hangul;
 
+use std::io;
 use std::collections::VecDeque;
 use crate::hangul::*;
 
@@ -77,7 +78,7 @@ impl Nokheui {
                             print!("{}", std::char::from_u32(value as u32).unwrap());
                         },
                         _ => {
-                            
+
                         }
                     }
                 },
@@ -94,13 +95,21 @@ impl Nokheui {
                     self.selected_data = get_jongseong_position(jaso.2);
                 },
                 'ㅆ' => {
-
+                    let value: i32 = self.get(self.selected_data).unwrap();
+                    self.put(get_jongseong_position(jaso.2), value);
                 },
                 'ㅈ' => {
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
 
+                    self.put(self.selected_data, if a <= b{
+                        1
+                    } else {
+                        2
+                    });
                 },
                 'ㅊ' => {
-
+                    
                 },
                 _ => {
 
