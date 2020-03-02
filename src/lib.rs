@@ -67,7 +67,19 @@ impl Nokheui {
                     self.put(self.selected_data, a % b);
                 }
                 'ㅁ' => {
+                    let value: i32 = self.get(self.selected_data).unwrap();
 
+                    match jaso.2 {
+                        'ㅇ' => {
+                            print!("{}", value)
+                        },
+                        'ㅎ' => {
+                            print!("{}", std::char::from_u32(value as u32).unwrap());
+                        },
+                        _ => {
+                            
+                        }
+                    }
                 },
                 'ㅂ' => {
 
