@@ -1,15 +1,13 @@
 pub mod hangul;
+pub mod storage;
 
-use std::io;
-use std::collections::VecDeque;
 use crate::hangul::*;
+use crate::storage::Storage;
 
-#[derive(Debug)]
 pub struct Nokheui {
     code: Vec<Vec<char>>,
     cursor: (usize, usize),
-    stacks: [Vec<i32>; 26],
-    queue: VecDeque<i32>,
+    storage: Storage,
     selected_data: usize
 }
 
@@ -18,8 +16,7 @@ impl Nokheui {
         Nokheui {
             code: code,
             cursor: (0, 0),
-            stacks: Default::default(),
-            queue: Default::default(),
+            storage: Storage::new(),
             selected_data: 0
         }
     }
@@ -32,43 +29,40 @@ impl Nokheui {
 
             match jaso.0 {
                 'ㅎ' => {
-                    match self.get(self.selected_data) {
-                        Some(n) => return n,
-                        None => return 0
-                    }
+                    return self.storage.pop(self.selected_data);
                 },
                 'ㄷ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, a + b);
+                    self.storage.push(self.selected_data, a + b);
                 },
                 'ㄸ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, a * b);
+                    self.storage.push(self.selected_data, a * b);
                 },
                 'ㅌ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, a - b);
+                    self.storage.push(self.selected_data, a - b);
                 },
                 'ㄴ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, a / b);
+                    self.storage.push(self.selected_data, a / b);
                 },
                 'ㄹ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, a % b);
+                    self.storage.push(self.selected_data, a % b);
                 }
                 'ㅁ' => {
-                    let value: i32 = self.get(self.selected_data).unwrap();
+                    let value: i32 = self.storage.pop(self.selected_data);
 
                     match jaso.2 {
                         'ㅇ' => {
@@ -78,12 +72,12 @@ impl Nokheui {
                             print!("{}", std::char::from_u32(value as u32).unwrap());
                         },
                         _ => {
-
+                            eprintln!("[*] Jongseong '{}' is invalid for output format.", jaso.2)
                         }
                     }
                 },
                 'ㅂ' => {
-
+                    
                 },
                 'ㅃ' => {
 
@@ -92,24 +86,25 @@ impl Nokheui {
 
                 },
                 'ㅅ' => {
-                    self.selected_data = get_jongseong_position(jaso.2);
+                    self.selected_data = storage::get_memory_number(jaso.2);
                 },
                 'ㅆ' => {
-                    let value: i32 = self.get(self.selected_data).unwrap();
-                    self.put(get_jongseong_position(jaso.2), value);
+                    let value: i32 = self.storage.pop(self.selected_data);
+
+                    self.storage.push(storage::get_memory_number(jaso.2), value);
                 },
                 'ㅈ' => {
-                    let a: i32 = self.get(self.selected_data).unwrap();
-                    let b: i32 = self.get(self.selected_data).unwrap();
+                    let a: i32 = self.storage.pop(self.selected_data);
+                    let b: i32 = self.storage.pop(self.selected_data);
 
-                    self.put(self.selected_data, if a <= b{
+                    self.storage.push(self.selected_data, if a <= b{
                         1
                     } else {
                         2
                     });
                 },
                 'ㅊ' => {
-                    
+
                 },
                 _ => {
 
@@ -120,23 +115,5 @@ impl Nokheui {
         }
 
         return 0;
-    }
-
-    fn put(&mut self, selected_data: usize, value: i32) {
-        if selected_data < 26 {
-            self.stacks[selected_data].push(value);
-        } else if selected_data == 26 {
-            return self.queue.push_back(value);
-        }
-    }
-
-    fn get(&mut self, selected_data: usize) -> Option<i32> {
-        if selected_data < 26 {
-            return self.stacks[selected_data].pop();
-        } else if selected_data == 26 {
-            return self.queue.pop_front();
-        } else {
-            return None
-        }
     }
 }
