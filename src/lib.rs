@@ -37,19 +37,34 @@ impl Nokheui {
                     }
                 },
                 'ㄷ' => {
-                    
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
+
+                    self.put(self.selected_data, a + b);
                 },
                 'ㄸ' => {
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
 
+                    self.put(self.selected_data, a * b);
                 },
                 'ㅌ' => {
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
 
+                    self.put(self.selected_data, a - b);
                 },
                 'ㄴ' => {
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
 
+                    self.put(self.selected_data, a / b);
                 },
                 'ㄹ' => {
+                    let a: i32 = self.get(self.selected_data).unwrap();
+                    let b: i32 = self.get(self.selected_data).unwrap();
 
+                    self.put(self.selected_data, a % b);
                 }
                 'ㅁ' => {
 
@@ -86,7 +101,7 @@ impl Nokheui {
         return 0;
     }
 
-    fn set(&mut self, selected_data: usize, value: i32) {
+    fn put(&mut self, selected_data: usize, value: i32) {
         if selected_data < 26 {
             self.stacks[selected_data].push(value);
         } else if selected_data == 26 {
