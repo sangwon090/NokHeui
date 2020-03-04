@@ -53,6 +53,53 @@ impl Storage {
             return 0;
         } 
     }
+
+    pub fn duplicate(&mut self, memory_number: usize) {        
+        if memory_number <= 25 {
+            let value: i32 = self.stacks[memory_number].last().cloned().unwrap();
+
+            self.stacks[memory_number].push(value);
+        } else if memory_number == 26 {
+            let value: i32 = self.queue[0];
+
+            self.queue.push_front(value);
+        } else if memory_number == 27 {
+            eprintln!("[*] Pipe is not implemented.")
+        } else {
+            eprintln!("[*] #{} is invalid storage.", memory_number);
+        }
+    }
+
+    pub fn swap(&mut self, memory_number: usize) {
+        if memory_number <= 25 {
+            let length: usize = self.stacks[memory_number].len();
+
+            self.stacks[memory_number].swap(length - 1, length - 2);
+        } else if memory_number == 26 {
+            let a: i32 = match self.queue.pop_front() {
+                Some(n) => n,
+                None => {
+                    eprintln!("[*] Queue 0 is empty.");
+                    0
+                }
+            };
+
+            let b: i32 = match self.queue.pop_front() {
+                Some(n) => n,
+                None => {
+                    eprintln!("[*] Queue 0 is empty.");
+                    0
+                }
+            };
+
+            self.queue.push_front(a);
+            self.queue.push_front(b);
+        } else if memory_number == 27 {
+            eprintln!("[*] Pipe is not implemented.")
+        } else {
+            eprintln!("[*] #{} is invalid storage.", memory_number);
+        }
+    }
 }
 
 pub fn get_memory_number(memory_name: char) -> usize {

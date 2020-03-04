@@ -141,10 +141,10 @@ impl Nokheui {
                         }
                     },
                     'ㅃ' => {
-
+                        self.storage.duplicate(self.selected_data);
                     },
                     'ㅍ' => {
-
+                        self.storage.swap(self.selected_data);
                     },
                     'ㅅ' => {
                         self.selected_data = storage::get_memory_number(jaso.2);
