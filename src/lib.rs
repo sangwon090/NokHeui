@@ -1,6 +1,9 @@
 pub mod hangul;
 pub mod storage;
 
+use std::io;
+use std::io::Read;
+
 use crate::hangul::*;
 use crate::storage::Storage;
 
@@ -80,7 +83,61 @@ impl Nokheui {
                         }
                     },
                     'ㅂ' => {
-                        
+                        match jaso.2 {
+                            'ㅇ' => {
+                                let mut input: String = String::new();
+
+                                match io::stdin().read_line(&mut input) {
+                                    Ok(_) => {
+                                        match input.trim().parse::<i32>() {
+                                            Ok(n) => {
+                                                self.storage.push(self.selected_data, n)
+                                            },
+                                            Err(_) => {
+                                                eprintln!("[*] {} is invalid integer.", input);
+                                                self.storage.push(self.selected_data, 0);
+                                            }
+                                        }
+                                    },
+                                    Err(_) => {
+                                        eprintln!("[*] Cannot read a line from stdin.");
+                                        self.storage.push(self.selected_data, 0);
+                                    }
+                                };
+                            },
+                            'ㅎ' => {
+                                let input: i32 = io::stdin().bytes().next().and_then(|result| result.ok()).map(|byte| byte as i32).unwrap();
+                                
+                                self.storage.push(self.selected_data, input);
+                            },
+                            'ㄱ' | 'ㄴ' | 'ㅅ' => {
+                                self.storage.push(self.selected_data, 2);
+                            },
+                            'ㄷ' | 'ㅈ' | 'ㅋ' => {
+                                self.storage.push(self.selected_data, 3);
+                            },
+                            'ㅁ' | 'ㅂ' | 'ㅊ' | 'ㅌ' | 'ㅍ' | 'ㄲ' | 'ㄳ' | 'ㅆ' => {
+                                self.storage.push(self.selected_data, 4);
+                            },
+                            'ㄹ' | 'ㄵ'	| 'ㄶ' => {
+                                self.storage.push(self.selected_data, 5);
+                            },
+                            'ㅄ' => {
+                                self.storage.push(self.selected_data, 6);
+                            },
+                            'ㄺ' | 'ㄽ' => {
+                                self.storage.push(self.selected_data, 7);
+                            },
+                            'ㅀ' => {
+                                self.storage.push(self.selected_data, 8);
+                            },
+                            'ㄻ' | 'ㄼ' | 'ㄾ' | 'ㄿ' => {
+                                self.storage.push(self.selected_data, 9);
+                            },
+                            _ => {
+                                self.storage.push(self.selected_data, 0);
+                            }
+                        }
                     },
                     'ㅃ' => {
 
@@ -156,8 +213,6 @@ impl Nokheui {
 
                     }
                 }
-            } else {
-                
             }
 
             self.move_cursor(self.velocity);
