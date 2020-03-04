@@ -28,7 +28,8 @@ impl Nokheui {
 
     pub fn run(&mut self) -> i32 {
         loop {
-            let current_char = self.code[self.cursor.1][self.cursor.0];
+            let current_char: char = self.code[self.cursor.1][self.cursor.0];
+            let mut is_redirected: bool = false;
             
             if is_hangul(current_char) {
                 let jaso = disassemble_hangul(current_char).unwrap();
@@ -107,7 +108,7 @@ impl Nokheui {
                             },
                             'ㅎ' => {
                                 let input: i32 = io::stdin().bytes().next().and_then(|result| result.ok()).map(|byte| byte as i32).unwrap();
-                                
+
                                 self.storage.push(self.selected_data, input);
                             },
                             'ㄱ' | 'ㄴ' | 'ㅅ' => {
@@ -164,53 +165,60 @@ impl Nokheui {
                         });
                     },
                     'ㅊ' => {
+                        let value: i32 = self.storage.pop(self.selected_data);
 
+                        if value == 0 {
+                            self.velocity = (-self.velocity.0, -self.velocity.1);
+                            is_redirected = true;
+                        }
                     },
                     _ => {
 
                     }
                 }
 
-                match jaso.1 {
-                    'ㅏ' => {
-                        self.velocity = (1, 0);
-                    },
-                    'ㅓ' => {
-                        self.velocity = (-1, 0);
-                    },
-                    'ㅗ' => {
-                        self.velocity = (0, -1);
-                    },
-                    'ㅜ' => {
-                        self.velocity = (0, 1);
-                    },
-                    'ㅑ' => {
-                        self.velocity = (2, 0);
-                    },
-                    'ㅕ' => {
-                        self.velocity = (-2, 0);
-                    },
-                    'ㅛ' => {
-                        self.velocity = (0, -2);
-                    },
-                    'ㅠ' => {
-                        self.velocity = (0, 2);
-                    },
-                    'ㅡ' => {
-                        if self.velocity.0 == 0 && self.velocity.1 != 0 {
+                if !is_redirected {
+                    match jaso.1 {
+                        'ㅏ' => {
+                            self.velocity = (1, 0);
+                        },
+                        'ㅓ' => {
+                            self.velocity = (-1, 0);
+                        },
+                        'ㅗ' => {
+                            self.velocity = (0, -1);
+                        },
+                        'ㅜ' => {
+                            self.velocity = (0, 1);
+                        },
+                        'ㅑ' => {
+                            self.velocity = (2, 0);
+                        },
+                        'ㅕ' => {
+                            self.velocity = (-2, 0);
+                        },
+                        'ㅛ' => {
+                            self.velocity = (0, -2);
+                        },
+                        'ㅠ' => {
+                            self.velocity = (0, 2);
+                        },
+                        'ㅡ' => {
+                            if self.velocity.0 == 0 && self.velocity.1 != 0 {
+                                self.velocity = (-self.velocity.0, -self.velocity.1);
+                            }
+                        },
+                        'ㅣ' => {
+                            if self.velocity.0 != 0 && self.velocity.1 == 0 {
+                                self.velocity = (-self.velocity.0, -self.velocity.1);
+                            }
+                        },
+                        'ㅢ' => {
                             self.velocity = (-self.velocity.0, -self.velocity.1);
-                        }
-                    },
-                    'ㅣ' => {
-                        if self.velocity.0 != 0 && self.velocity.1 == 0 {
-                            self.velocity = (-self.velocity.0, -self.velocity.1);
-                        }
-                    },
-                    'ㅢ' => {
-                        self.velocity = (-self.velocity.0, -self.velocity.1);
-                    },
-                    _ => {
+                        },
+                        _ => {
 
+                        }
                     }
                 }
             }
