@@ -107,9 +107,16 @@ impl Nokheui {
                                 };
                             },
                             'ㅎ' => {
-                                let input: i32 = io::stdin().bytes().next().and_then(|result| result.ok()).map(|byte| byte as i32).unwrap();
-
-                                self.storage.push(self.selected_data, input);
+                                let mut input: String = String::new();
+                                self.storage.push(self.selected_data, match io::stdin().read_line(&mut input) {
+                                    Ok(_) => {
+                                        input.chars().next().unwrap() as i32
+                                    },
+                                    Err(_) => {
+                                        eprintln!("[*] Cannot read a line from stdin.");
+                                        0
+                                    }
+                                });
                             },
                             'ㄱ' | 'ㄴ' | 'ㅅ' => {
                                 self.storage.push(self.selected_data, 2);
