@@ -126,20 +126,17 @@ pub fn get_storage_number(storage_name: char) -> usize {
 
 pub fn get_storage(storage_number: usize) -> Option<StorageType> {
     match storage_number {
-        0..=7 => {
+        0..=20 => {
             return Some(StorageType::Stack(storage_number));
         },
-        8 => {
+        21 => {
             return Some(StorageType::Queue);
         },
-        9..=13 => {
+        22..=26 => {
             return Some(StorageType::Stack(storage_number - 1));
         },
-        14 => {
+        27 => {
             return Some(StorageType::Pipe);
-        },
-        15..=27 => {
-            return Some(StorageType::Stack(storage_number - 2));
         },
         _ => {
             eprintln!("[*] {} is invalid storage number.", storage_number);
