@@ -2,17 +2,16 @@ pub mod hangul;
 pub mod storage;
 
 use std::io;
-use std::io::Read;
 
 use crate::hangul::*;
-use crate::storage::Storage;
+use crate::storage::*;
 
 pub struct Nokheui {
     code: Vec<Vec<char>>,
     cursor: (usize, usize),
     velocity: (i32, i32),
     storage: Storage,
-    selected_data: usize
+    selected_storage: StorageType
 }
 
 impl Nokheui {
@@ -22,7 +21,7 @@ impl Nokheui {
             cursor: (0, 0),
             velocity: (0, 1),
             storage: Storage::new(),
-            selected_data: 0
+            selected_storage: StorageType::Stack(0)
         }
     }
 
@@ -39,37 +38,37 @@ impl Nokheui {
                         break;
                     },
                     'ㄷ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, a + b);
+                        self.storage.push(&self.selected_storage, a + b);
                     },
                     'ㄸ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, a * b);
+                        self.storage.push(&self.selected_storage, a * b);
                     },
                     'ㅌ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, a - b);
+                        self.storage.push(&self.selected_storage, a - b);
                     },
                     'ㄴ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, a / b);
+                        self.storage.push(&self.selected_storage, a / b);
                     },
                     'ㄹ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, a % b);
+                        self.storage.push(&self.selected_storage, a % b);
                     }
                     'ㅁ' => {
-                        let value: i32 = self.storage.pop(self.selected_data);
+                        let value: i32 = self.storage.pop(&self.selected_storage);
 
                         match jaso.2 {
                             'ㅇ' => {
@@ -92,23 +91,24 @@ impl Nokheui {
                                     Ok(_) => {
                                         match input.trim().parse::<i32>() {
                                             Ok(n) => {
-                                                self.storage.push(self.selected_data, n)
+
+                                                self.storage.push(&self.selected_storage, n);
                                             },
                                             Err(_) => {
                                                 eprintln!("[*] {} is invalid integer.", input);
-                                                self.storage.push(self.selected_data, 0);
+                                                self.storage.push(&self.selected_storage, 0);
                                             }
                                         }
                                     },
                                     Err(_) => {
                                         eprintln!("[*] Cannot read a line from stdin.");
-                                        self.storage.push(self.selected_data, 0);
+                                        self.storage.push(&self.selected_storage, 0);
                                     }
                                 };
                             },
                             'ㅎ' => {
                                 let mut input: String = String::new();
-                                self.storage.push(self.selected_data, match io::stdin().read_line(&mut input) {
+                                self.storage.push(&self.selected_storage, match io::stdin().read_line(&mut input) {
                                     Ok(_) => {
                                         input.chars().next().unwrap() as i32
                                     },
@@ -119,60 +119,73 @@ impl Nokheui {
                                 });
                             },
                             'ㄱ' | 'ㄴ' | 'ㅅ' => {
-                                self.storage.push(self.selected_data, 2);
+                                self.storage.push(&self.selected_storage, 2);
                             },
                             'ㄷ' | 'ㅈ' | 'ㅋ' => {
-                                self.storage.push(self.selected_data, 3);
+                                self.storage.push(&self.selected_storage, 3);
                             },
                             'ㅁ' | 'ㅂ' | 'ㅊ' | 'ㅌ' | 'ㅍ' | 'ㄲ' | 'ㄳ' | 'ㅆ' => {
-                                self.storage.push(self.selected_data, 4);
+                                self.storage.push(&self.selected_storage, 4);
                             },
                             'ㄹ' | 'ㄵ'	| 'ㄶ' => {
-                                self.storage.push(self.selected_data, 5);
+                                self.storage.push(&self.selected_storage, 5);
                             },
                             'ㅄ' => {
-                                self.storage.push(self.selected_data, 6);
+                                self.storage.push(&self.selected_storage, 6);
                             },
                             'ㄺ' | 'ㄽ' => {
-                                self.storage.push(self.selected_data, 7);
+                                self.storage.push(&self.selected_storage, 7);
                             },
                             'ㅀ' => {
-                                self.storage.push(self.selected_data, 8);
+                                self.storage.push(&self.selected_storage, 8);
                             },
                             'ㄻ' | 'ㄼ' | 'ㄾ' | 'ㄿ' => {
-                                self.storage.push(self.selected_data, 9);
+                                self.storage.push(&self.selected_storage, 9);
                             },
                             _ => {
-                                self.storage.push(self.selected_data, 0);
+                                self.storage.push(&self.selected_storage, 0);
                             }
                         }
                     },
                     'ㅃ' => {
-                        self.storage.duplicate(self.selected_data);
+                        self.storage.duplicate(&self.selected_storage);
                     },
                     'ㅍ' => {
-                        self.storage.swap(self.selected_data);
+                        self.storage.swap(&self.selected_storage);
                     },
                     'ㅅ' => {
-                        self.selected_data = storage::get_memory_number(jaso.2);
+                        self.selected_storage = match storage::get_storage(storage::get_storage_number(jaso.2)) {
+                            Some(s) => s,
+                            None => {
+                                eprintln!("[*] {} is invalid storage name.", jaso.2);
+                                StorageType::Stack(0)
+                            }
+                        }
                     },
                     'ㅆ' => {
-                        let value: i32 = self.storage.pop(self.selected_data);
+                        let value: i32 = self.storage.pop(&self.selected_storage);
+                        let storage: StorageType = match storage::get_storage(storage::get_storage_number(jaso.2)) {
+                            Some(s) => s,
+                            None => {
+                                eprintln!("[*] {} is invalid storage name.", jaso.2);
+                                StorageType::Stack(0)
+                            }
+                        };
 
-                        self.storage.push(storage::get_memory_number(jaso.2), value);
+                        self.storage.push(&storage, value);
                     },
                     'ㅈ' => {
-                        let a: i32 = self.storage.pop(self.selected_data);
-                        let b: i32 = self.storage.pop(self.selected_data);
+                        let a: i32 = self.storage.pop(&self.selected_storage);
+                        let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(self.selected_data, if a <= b{
+                        self.storage.push(&self.selected_storage, if a <= b{
                             1
                         } else {
                             2
                         });
                     },
                     'ㅊ' => {
-                        let value: i32 = self.storage.pop(self.selected_data);
+                        let value: i32 = self.storage.pop(&self.selected_storage);
 
                         if value == 0 {
                             self.velocity = (-self.velocity.0, -self.velocity.1);
@@ -233,7 +246,7 @@ impl Nokheui {
             self.move_cursor(self.velocity);
         }
         
-        return self.storage.pop(self.selected_data);
+        return self.storage.pop(&self.selected_storage);
     }
 
     fn move_cursor(&mut self, velocity: (i32, i32)) {
