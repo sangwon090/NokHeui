@@ -29,7 +29,7 @@ impl Nokheui {
         loop {
             let current_char: char = self.code[self.cursor.1][self.cursor.0];
             let mut is_redirected: bool = false;
-            
+
             if is_hangul(current_char) {
                 let jaso = disassemble_hangul(current_char).unwrap();
 
@@ -41,31 +41,31 @@ impl Nokheui {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, a + b);
+                        self.storage.push(&self.selected_storage, b + a);
                     },
                     'ㄸ' => {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, a * b);
+                        self.storage.push(&self.selected_storage, b * a);
                     },
                     'ㅌ' => {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, a - b);
+                        self.storage.push(&self.selected_storage, b - a);
                     },
                     'ㄴ' => {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, a / b);
+                        self.storage.push(&self.selected_storage, b / a);
                     },
                     'ㄹ' => {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, a % b);
+                        self.storage.push(&self.selected_storage, b % a);
                     }
                     'ㅁ' => {
                         let value: i32 = self.storage.pop(&self.selected_storage);
