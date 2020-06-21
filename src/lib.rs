@@ -188,7 +188,6 @@ impl Nokheui {
                         let value: i32 = self.storage.pop(&self.selected_storage);
 
                         if value == 0 {
-                            self.velocity = (-self.velocity.0, -self.velocity.1);
                             is_redirected = true;
                         }
                     },
@@ -197,49 +196,51 @@ impl Nokheui {
                     }
                 }
 
-                if !is_redirected {
-                    match jaso.1 {
-                        'ㅏ' => {
-                            self.velocity = (1, 0);
-                        },
-                        'ㅓ' => {
-                            self.velocity = (-1, 0);
-                        },
-                        'ㅗ' => {
-                            self.velocity = (0, -1);
-                        },
-                        'ㅜ' => {
-                            self.velocity = (0, 1);
-                        },
-                        'ㅑ' => {
-                            self.velocity = (2, 0);
-                        },
-                        'ㅕ' => {
-                            self.velocity = (-2, 0);
-                        },
-                        'ㅛ' => {
-                            self.velocity = (0, -2);
-                        },
-                        'ㅠ' => {
-                            self.velocity = (0, 2);
-                        },
-                        'ㅡ' => {
-                            if self.velocity.0 == 0 && self.velocity.1 != 0 {
-                                self.velocity = (-self.velocity.0, -self.velocity.1);
-                            }
-                        },
-                        'ㅣ' => {
-                            if self.velocity.0 != 0 && self.velocity.1 == 0 {
-                                self.velocity = (-self.velocity.0, -self.velocity.1);
-                            }
-                        },
-                        'ㅢ' => {
+                match jaso.1 {
+                    'ㅏ' => {
+                        self.velocity = (1, 0);
+                    },
+                    'ㅓ' => {
+                        self.velocity = (-1, 0);
+                    },
+                    'ㅗ' => {
+                        self.velocity = (0, -1);
+                    },
+                    'ㅜ' => {
+                        self.velocity = (0, 1);
+                    },
+                    'ㅑ' => {
+                        self.velocity = (2, 0);
+                    },
+                    'ㅕ' => {
+                        self.velocity = (-2, 0);
+                    },
+                    'ㅛ' => {
+                        self.velocity = (0, -2);
+                    },
+                    'ㅠ' => {
+                        self.velocity = (0, 2);
+                    },
+                    'ㅡ' => {
+                        if self.velocity.0 == 0 && self.velocity.1 != 0 {
                             self.velocity = (-self.velocity.0, -self.velocity.1);
-                        },
-                        _ => {
-
                         }
+                    },
+                    'ㅣ' => {
+                        if self.velocity.0 != 0 && self.velocity.1 == 0 {
+                            self.velocity = (-self.velocity.0, -self.velocity.1);
+                        }
+                    },
+                    'ㅢ' => {
+                        self.velocity = (-self.velocity.0, -self.velocity.1);
+                    },
+                    _ => {
+
                     }
+                }
+
+                if is_redirected {
+                    self.velocity = (-self.velocity.0, -self.velocity.1);
                 }
             }
 
