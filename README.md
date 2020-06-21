@@ -4,22 +4,22 @@
 현재 모든 기능이 구현되었지만 버그로 인하여 정상 작동하지 않습니다.
 
 ## 정상 작동한 [예제 코드](https://github.com/aheui/snippets)
-- [ ] 99bottles
+- [x] 99bottles
 - [ ] 99dan
 - [x] bahmanghui
-- [ ] fibonacci.codroc
-- [x] fibonacci.galadrien
-- [x] fibonacci.puzzlet
-- [x] fibonacci.tokigun
+- [x] fibonacci.codroc
+- [x] fibonacci.galadrien - 정상작동하지만 오버플로우 발생
+- [x] fibonacci.puzzlet - 정상작동하지만 오버플로우 발생
+- [x] fibonacci.tokigun - 정상작동하지만 오버플로우 발생
 - [x] hello-world
-- [ ] hello
+- [x] hello
 - [x] ha-ut
 - [ ] huntcook
-- [ ] pokryong
+- [x] pokryong
 - [ ] ddeok
-- [ ] hammer
-- [ ] sweat
-- [ ] logo
+- [x] hammer
+- [x] sweat
+- [x] logo
 - [ ] pi
 - [ ] quine.puzzlet.40col
 - [ ] quine.puzzlet

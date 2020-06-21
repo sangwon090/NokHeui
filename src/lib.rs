@@ -30,6 +30,9 @@ impl Nokheui {
             let current_char: char = self.code[self.cursor.1][self.cursor.0];
             let mut is_redirected: bool = false;
 
+            //println!("{}", current_char);
+            //println!("{:?}", self.storage);
+
             if is_hangul(current_char) {
                 let jaso = disassemble_hangul(current_char).unwrap();
 
@@ -178,10 +181,10 @@ impl Nokheui {
                         let a: i32 = self.storage.pop(&self.selected_storage);
                         let b: i32 = self.storage.pop(&self.selected_storage);
 
-                        self.storage.push(&self.selected_storage, if a <= b{
+                        self.storage.push(&self.selected_storage, if b >= a {
                             1
                         } else {
-                            2
+                            0
                         });
                     },
                     'ㅊ' => {

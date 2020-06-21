@@ -8,6 +8,7 @@ pub enum StorageType {
     Pipe
 }
 
+#[derive(Debug)]
 pub struct Storage {
     stacks: [Vec<i32>; 26],
     queue: VecDeque<i32>,
@@ -50,7 +51,7 @@ impl Storage {
                 match self.queue.pop_front() {
                     Some(n) => return n,
                     None => {
-                        eprintln!("[*] Queue 0 is empty.");
+                        eprintln!("[*] Queue 0 is empty.!pop");
                         return 0;
                     }
                 }
@@ -65,14 +66,22 @@ impl Storage {
     pub fn duplicate(&mut self, storage_type: &StorageType) {
         match storage_type {
             StorageType::Stack(n) => {
-                let value: i32 = self.stacks[*n].last().cloned().unwrap();
+                if self.stacks[*n].len() > 0 {
+                    let value: i32 = self.stacks[*n].last().cloned().unwrap();
 
-                self.stacks[*n].push(value);   
+                    self.stacks[*n].push(value);
+                } else {
+                    eprintln!("[*] Stack {} is empty.", n)
+                }
             },
             StorageType::Queue => {
-                let value: i32 = self.queue[0];
+                if self.queue.len() > 0 {
+                    let value: i32 = self.queue[0];
 
-                self.queue.push_front(value);
+                    self.queue.push_front(value);
+                } else {
+                    eprintln!("[*] Queue 0 is empty.!dup")
+                }
             },
             StorageType::Pipe => {
                 eprintln!("[*] Pipe is not implemented.")
@@ -83,29 +92,24 @@ impl Storage {
     pub fn swap(&mut self, storage_type: &StorageType) {
         match storage_type {
             StorageType::Stack(n) => {
-                let length: usize = self.stacks[*n].len();
+                if self.stacks[*n].len() >= 2 {
+                    let length: usize = self.stacks[*n].len();
 
-                self.stacks[*n].swap(length - 1, length - 2);
+                    self.stacks[*n].swap(length - 1, length - 2);
+                } else {
+                    eprintln!("[*] Stack is not big enough to swap values.");
+                }
             },
             StorageType::Queue => {
-                let a: i32 = match self.queue.pop_front() {
-                    Some(n) => n,
-                    None => {
-                        eprintln!("[*] Queue 0 is empty.");
-                        0
-                    }
-                };
-    
-                let b: i32 = match self.queue.pop_front() {
-                    Some(n) => n,
-                    None => {
-                        eprintln!("[*] Queue 0 is empty.");
-                        0
-                    }
-                };
-    
-                self.queue.push_front(a);
-                self.queue.push_front(b);
+                if self.queue.len() >= 2 {
+                    let a: i32 = self.queue.pop_front().unwrap();
+                    let b: i32 = self.queue.pop_front().unwrap();
+
+                    self.queue.push_front(a);
+                    self.queue.push_front(b);
+                } else {
+                    eprintln!("[*] Queue is not big enough to swap values.");
+                }
             },
             StorageType::Pipe => {
                 eprintln!("[*] Pipe is not implemented.")
