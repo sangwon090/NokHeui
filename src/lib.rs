@@ -78,7 +78,7 @@ impl Nokheui {
                                 print!("{}", std::char::from_u32(value as u32).unwrap());
                             },
                             _ => {
-                                eprintln!("[*] Jongseong '{}' is invalid for output format.", jaso.2)
+
                             }
                         }
                     },
